@@ -2,9 +2,10 @@ package com.vini.auth_service.controller;
 
 import com.vini.auth_service.dto.AuthResponse;
 import com.vini.auth_service.dto.LoginRequest;
-import com.vini.auth_service.dto.RefreshRequest;
 import com.vini.auth_service.dto.RegisterRequest;
 import com.vini.auth_service.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,12 +29,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(userService.login(request));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(userService.login(request, response));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
-        return ResponseEntity.ok(userService.refresh(request));
+    public ResponseEntity<AuthResponse> refresh(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(userService.refresh(request, response));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        userService.logout(request, response);
+        return ResponseEntity.noContent().build();
     }
 }

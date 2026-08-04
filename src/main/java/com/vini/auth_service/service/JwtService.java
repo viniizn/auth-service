@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 
 @Service
@@ -54,6 +55,16 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Duration getRemainingTtl(String token) {
+        Date expiration = extractClaims(token).getExpiration();
+        long remaining = expiration.getTime() - System.currentTimeMillis();
+        return remaining > 0 ? Duration.ofMillis(remaining) : Duration.ZERO;
+    }
+
+    public Duration getRefreshTokenTtl() {
+        return Duration.ofMillis(refreshExpiration);
     }
 
     private Claims extractClaims(String token) {
