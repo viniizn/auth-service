@@ -2,6 +2,7 @@ package com.vini.auth_service.controller;
 
 import com.vini.auth_service.dto.AuthResponse;
 import com.vini.auth_service.dto.LoginRequest;
+import com.vini.auth_service.dto.RefreshRequest;
 import com.vini.auth_service.dto.RegisterRequest;
 import com.vini.auth_service.service.UserService;
 import jakarta.validation.Valid;
@@ -29,5 +30,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        return ResponseEntity.ok(userService.refresh(request));
     }
 }

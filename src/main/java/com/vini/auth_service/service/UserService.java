@@ -3,6 +3,7 @@ package com.vini.auth_service.service;
 import com.vini.auth_service.domain.User;
 import com.vini.auth_service.dto.AuthResponse;
 import com.vini.auth_service.dto.LoginRequest;
+import com.vini.auth_service.dto.RefreshRequest;
 import com.vini.auth_service.dto.RegisterRequest;
 import com.vini.auth_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,18 @@ public class UserService {
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         return new AuthResponse(accessToken, refreshToken);
+    }
+
+    public AuthResponse refresh(RefreshRequest request) {
+        String token = request.refreshToken();
+
+        if (!jwtService.isTokenValid(token)) {
+            throw new IllegalArgumentException("Invalid or expired refresh token");
+        }
+
+        String email = jwtService.extractEmail(token);
+        String newAccessToken = jwtService.generateAccessToken(email);
+
+        return new AuthResponse(newAccessToken, token);
     }
 }
